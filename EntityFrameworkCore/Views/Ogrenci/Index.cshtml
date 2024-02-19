@@ -13,11 +13,12 @@ ama biz burada bir liste işleyeceğimiz için @model IEnumerable<Ogrenci> yazd�
             <th>@Html.DisplayNameFor(m => m.OgrenciAd)</th>
             <th>@Html.DisplayNameFor(m => m.OgrenciSoyad)</th>
             <th>@Html.DisplayNameFor(m => m.Telefon)</th>
+            <th>Diğer</th>
         </tr>
     </thead>
 
     <tbody>
-        @foreach(var item in Model)
+        @foreach (var item in Model)
         {
             <tr>
                 @* DisplayFor, EditFor, DeleteFor, DetailsFor gibi tag helperlar, modelin propertylerini ekrana yazdırmak için kullanılır. *@
@@ -26,14 +27,10 @@ ama biz burada bir liste işleyeceğimiz için @model IEnumerable<Ogrenci> yazd�
                 <td>@Html.DisplayFor(x => item.OgrenciSoyad)</td>
                 <td>@item.Telefon</td>
                 <td>
-                    <a href="" class="btn btn-sm btn-primary">Details</a>
-                    <a href="" class="btn btn-sm btn-danger">Delete</a>
+                    <a class="btn btn-sm btn-primary" asp-controller="Ogrenci" asp-action="Edit" asp-route-id="@item.OgrenciId">Düzenle</a> |
+                    <a class="btn btn-sm btn-primary" asp-controller="Ogrenci" asp-action="Details" asp-route-id="@item.OgrenciId">Detaylar</a> |
+                    <a class="btn btn-sm btn-primary" asp-controller="Ogrenci" asp-action="Delete" asp-route-id="@item.OgrenciId">Sil</a>
                 </td>
-                @* <td>
-                    <a asp-controller="Ogrenci" asp-action="Edit" asp-route-id="@item.OgrenciId">Düzenle</a> |
-                    <a asp-controller="Ogrenci" asp-action="Details" asp-route-id="@item.OgrenciId">Detaylar</a> |
-                    <a asp-controller="Ogrenci" asp-action="Delete" asp-route-id="@item.OgrenciId">Sil</a>
-                </td> *@
             </tr>
         }
     </tbody>

@@ -43,5 +43,78 @@ namespace EntityFrameworkCore.Controllers
         }
 
 
+        [HttpGet]
+        public async Task<IActionResult> Edit(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            // id'ye göre öğrenci bulunuyor
+            // await olarak yollayabilmek için FindAsync() metodu kullanılıyor
+            // id'ye göre öğrenci bulunamazsa NotFound() döndürülüyor
+            // var ogrenci = await _context.Ogrenciler.FindAsync(id);
+
+            // alternatif olarak FirstOrDefaultAsync() metodu kullanılabilir
+            // FirstOrDefaultAsync() metodundaki fark ise, eğer id'ye göre öğrenci bulunamazsa null döndürür
+            // aynı zamanda id değilde farklı parametrelere göre de arama yapılabilir
+            var ogrenci = await _context.Ogrenciler.FirstOrDefaultAsync(m => m.OgrenciId == id);
+
+            if (ogrenci == null)
+            {
+                return NotFound();
+            }
+
+            return View("Edit", ogrenci);
+        }
+
+        [HttpPost]
+        // ValidateAntiForgeryToken ile güvenlik önlemi alınıyor
+        // bu sayede sadece formdan gelen verilerin işlenebileceği garanti altına alınıyor
+        // bu sayede bir saldırganın formdan gelen verileri değiştirerek veritabanına zarar vermesi engellenmiş oluyor
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int? id, Ogrenci model)
+        {
+            if (id != model.OgrenciId)
+            {
+                return NotFound();
+            }
+
+            // model nesnesi doğrulama işleminden geçiriliyor
+            // eğer model nesnesi doğrulama işleminden geçemezse aynı view tekrar döndürülüyor
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    // _context üzerinden Ogrenciler tablosundaki model nesnesi güncelleniyor
+                    _context.Update(model);
+                    // değişiklikler veritabanına kaydediliyor
+                    // bunu yazmasaydık güncelleme işlemi gerçekleşmeyecekti
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    // eğer güncelleme işlemi sırasında bir hata oluşursa
+                    //  
+                    if (!_context.Ogrenciler.Any(o => o.OgrenciId == model.OgrenciId))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction("Index");
+            }
+
+
+            // _context üzerinden Ogrenciler tablosuna model nesnesi ekleniyor
+            _context.Ogrenciler.Add(model);
+
+            return RedirectToAction("Index");
+        }
+
     }
 }
