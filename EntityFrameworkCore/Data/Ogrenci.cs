@@ -7,7 +7,7 @@ namespace EntityFrameworkCore.Data
         // id => primary key
         [Key]
         public int OgrenciId { get; set; }
-
+        
         public string? OgrenciAd { get; set; }
         public string? OgrenciSoyad { get; set; }
 

@@ -1,5 +1,6 @@
 ﻿using EntityFrameworkCore.Data;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace EntityFrameworkCore.Controllers
 {
@@ -11,6 +12,17 @@ namespace EntityFrameworkCore.Controllers
         {
             _context = context;
         }
+
+        // Ogrenciler tablosundaki tüm verileri listeleyen bir view döndürülüyor
+        public async Task<IActionResult> Index()
+        {
+            // await olarak yollayabilmek için ToListAsync() metodu kullanılıyor 
+            var ogrenciler = await _context.Ogrenciler.ToListAsync();
+
+            return View(ogrenciler);
+        }
+
+
 
         [HttpGet]
         public IActionResult Create()
@@ -27,7 +39,7 @@ namespace EntityFrameworkCore.Controllers
             // değişiklikler veritabanına kaydediliyor
             await _context.SaveChangesAsync();
 
-            return RedirectToAction("Index","Home");
+            return RedirectToAction("Index");
         }
 
 

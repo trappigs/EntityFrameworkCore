@@ -1,0 +1,44 @@
+﻿@* buraya @model Ogrenci yazsaydık, sadece bir ogrenciyi işleyebilirdik
+ama biz burada bir liste işleyeceğimiz için @model IEnumerable<Ogrenci> yazdık *@
+
+@model IEnumerable<Ogrenci>
+
+<h2>Öğrenci Listesi</h2>
+<hr />
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            @* Html.DisplayNameFor ile sütunun adını doğrudan yazdırıyoruz *@
+            <th>@Html.DisplayNameFor(m => m.OgrenciId)</th>
+            <th>@Html.DisplayNameFor(m => m.OgrenciAd)</th>
+            <th>@Html.DisplayNameFor(m => m.OgrenciSoyad)</th>
+            <th>@Html.DisplayNameFor(m => m.Telefon)</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach(var item in Model)
+        {
+            <tr>
+                @* DisplayFor, EditFor, DeleteFor, DetailsFor gibi tag helperlar, modelin propertylerini ekrana yazdırmak için kullanılır. *@
+                <td>@Html.DisplayFor(x => item.OgrenciId) </td>
+                <td>@Html.DisplayFor(x => item.OgrenciAd)</td>
+                <td>@Html.DisplayFor(x => item.OgrenciSoyad)</td>
+                <td>@item.Telefon</td>
+                <td>
+                    <a href="" class="btn btn-sm btn-primary">Details</a>
+                    <a href="" class="btn btn-sm btn-danger">Delete</a>
+                </td>
+                @* <td>
+                    <a asp-controller="Ogrenci" asp-action="Edit" asp-route-id="@item.OgrenciId">Düzenle</a> |
+                    <a asp-controller="Ogrenci" asp-action="Details" asp-route-id="@item.OgrenciId">Detaylar</a> |
+                    <a asp-controller="Ogrenci" asp-action="Delete" asp-route-id="@item.OgrenciId">Sil</a>
+                </td> *@
+            </tr>
+        }
+    </tbody>
+</table>
+
+<hr />
+
+<a asp-controller="Ogrenci" asp-action="Create" class="btn btn-primary">Yeni Öğrenci Ekle</a>
