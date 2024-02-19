@@ -1,9 +1,23 @@
+using EntityFrameworkCore.Data;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
+// bu kod, mutlaka var app = builder.Build(); kodundan önce olmalý
+builder.Services.AddDbContext<DataContext>(options => {
+    var config = builder.Configuration;
+    var connectionString = config.GetConnectionString("database");
+    options.UseSqlServer(connectionString);
+});
+
 var app = builder.Build();
+
+
+
+
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
