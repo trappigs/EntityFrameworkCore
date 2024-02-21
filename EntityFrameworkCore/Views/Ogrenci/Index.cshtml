@@ -29,7 +29,7 @@ ama biz burada bir liste işleyeceğimiz için @model IEnumerable<Ogrenci> yazd�
                 <td>
                     <a class="btn btn-sm btn-primary" asp-controller="Ogrenci" asp-action="Edit" asp-route-id="@item.OgrenciId">Düzenle</a> |
                     <a class="btn btn-sm btn-primary" asp-controller="Ogrenci" asp-action="Details" asp-route-id="@item.OgrenciId">Detaylar</a> |
-                    <a class="btn btn-sm btn-primary" asp-controller="Ogrenci" asp-action="Delete" asp-route-id="@item.OgrenciId">Sil</a>
+                    <a class="btn btn-sm btn-danger" asp-controller="Ogrenci" asp-action="Delete" asp-route-id="@item.OgrenciId">Sil</a>
                 </td>
             </tr>
         }

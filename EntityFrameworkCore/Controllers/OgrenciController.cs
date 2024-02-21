@@ -116,5 +116,46 @@ namespace EntityFrameworkCore.Controllers
             return RedirectToAction("Index");
         }
 
+
+        [HttpGet]
+        public async Task<IActionResult> Delete(int? id)
+        {
+            if(id == null)
+            {
+                return NotFound();
+            }
+
+            var ogrenci = await _context.Ogrenciler.FindAsync(id);
+
+            if (ogrenci == null)
+            {
+                return NotFound();
+            }
+
+            // ogrenci nesnesi view'e gönderiliyor
+            return View(ogrenci);
+        }
+
+        [HttpPost]
+        // fromform ile formdan gelen veriler alınıyor
+        public async Task<IActionResult> Delete([FromForm]int id)
+        {
+            var ogrenci = await _context.Ogrenciler.FindAsync(id);
+
+            
+            if (ogrenci == null)
+            {
+                return NotFound();
+            }
+
+            _context.Ogrenciler.Remove(ogrenci);
+
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("Index");
+        }
+
+
+
     }
 }

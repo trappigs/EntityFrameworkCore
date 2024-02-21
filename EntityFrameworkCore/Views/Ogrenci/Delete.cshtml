@@ -1,0 +1,21 @@
+﻿@* Ogrenci nesnesi viewe geldi *@
+@model Ogrenci
+
+<p><b> @Model.OgrenciAd @Model.OgrenciSoyad</b> isimli öğrenciyi silmek istiyor musunuz?</p>
+
+
+
+<form asp-action="Delete" method="post">
+
+    @* post formu çalışacağında öğrenci id'si de gönderilmeli *@
+    <input type="hidden" name="id" value="@Model.OgrenciId" />
+
+
+
+    <button type="submit" class="btn btn btn-danger">
+        Evet
+    </button>
+
+    <a asp-action="index" class="btn btn-primary">Hayır</a>
+
+</form>
