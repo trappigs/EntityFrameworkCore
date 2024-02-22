@@ -82,7 +82,7 @@ namespace EntityFrameworkCore.Controllers
             }
 
 
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("List", "Kurs");
         }
 
 

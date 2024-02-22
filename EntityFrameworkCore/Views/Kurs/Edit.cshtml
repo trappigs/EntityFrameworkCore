@@ -7,12 +7,12 @@
 <h2>Kurs Düzenleme</h2>
 <hr />
 
-<form method="post" action="Edit">
+<form method="post" asp-controller="Kurs" asp-action="Edit">
     <input type="hidden" asp-for="KursId" />
     
     <div class="mb-3">
         <label class="form-label" asp-for="Baslik">Kurs Adı</label>
-        <input asp-for="Baslik" value="" class="form-control"/>
+        <input asp-for="Baslik" class="form-control"/>
     </div>
 
     <button type="submit" class="btn btn-primary">
