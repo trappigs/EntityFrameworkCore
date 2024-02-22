@@ -33,13 +33,56 @@ namespace EntityFrameworkCore.Controllers
 
             await _context.SaveChangesAsync();
 
-            return RedirectToAction("List","Kurs");
+            return RedirectToAction("List", "Kurs");
         }
 
         public IActionResult List()
         {
             var kurslar = _context.Kurslar.ToList();
             return View(kurslar);
+        }
+
+        // Editlenecek Kurs Sayfasının id bilgisi alınıyor
+        // id bilgisi ile veritabanından ilgili kurs bilgisi çekiliyor
+        // ilgili kurs bilgisi ile birlikte Edit.cshtml sayfasına yönlendiriliyor
+        // Edit.cshtml sayfasında ilgili kurs bilgisi gösteriliyor
+        // Kullanıcı bu bilgileri düzenleyip kaydetmek istediğinde, bu bilgileri alıp veritabanına kaydediyoruz
+        // Edit.cshtml sayfasında düzenlenen bilgileri almak için [HttpPost] olarak işaretlenmiş bir Edit metodu oluşturuyoruz
+        // Bu metodu oluştururken, Edit.cshtml sayfasında düzenlenen bilgileri almak için bir Kurs modeli oluşturuyoruz
+        // Bu modeli parametre olarak alıyoruz
+        // Bu modeli veritabanına kaydediyoruz
+        // Veritabanına kaydettikten sonra, kullanıcıyı List.cshtml sayfasına yönlendiriyoruz
+        // Bu sayfada, veritabanındaki kurs bilgilerini listeleyip gösteriyoruz
+        [HttpGet]
+        public IActionResult Edit(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            var Kurslar = _context.Kurslar.FirstOrDefault(m => m.KursId == id);
+
+            return View("Edit", Kurslar);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(int id, Kurs Kurslar)
+        {
+
+            if (Kurslar == null)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                _context.Update(Kurslar);
+
+                await _context.SaveChangesAsync();
+            }
+
+
+            return RedirectToAction("Index", "Home");
         }
 
 
