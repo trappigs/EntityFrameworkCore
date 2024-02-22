@@ -1,0 +1,20 @@
+﻿@* Ogrenci nesnesi viewe geldi *@
+@model Kurs
+
+<p><b> @Model.Baslik </b> isimli kursu silmek istiyor musunuz?</p>
+
+
+<form asp-controller="Kurs" asp-action="DeleteConfirm" method="post">
+
+    @* post formu çalışacağında öğrenci id'si de gönderilmeli *@
+    <input type="hidden" asp-for="KursId" class="form-control" />
+
+
+
+    <button type="submit" class="btn btn btn-danger">
+        Evet
+    </button>
+
+    <a asp-action="List" asp-controller="Kurs" class="btn btn-primary">Hayır</a>
+
+</form>

@@ -85,6 +85,39 @@ namespace EntityFrameworkCore.Controllers
             return RedirectToAction("List", "Kurs");
         }
 
+        [HttpGet]
+        public async Task<IActionResult> Delete(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
 
+            var kurs = await _context.Kurslar.FindAsync(id);
+
+            if (kurs == null)
+            {
+                return NotFound();
+            }
+
+            // ogrenci nesnesi view'e gönderiliyor
+            return View("DeleteConfirm", kurs);
+        }
+
+        [HttpPost]
+        // fromform ile formdan gelen veriler alınıyor
+        public async Task<IActionResult> DeleteConfirm(int id, Kurs kurs)
+        {
+            if (kurs == null)
+            {
+                return NotFound();
+            }
+
+            _context.Kurslar.Remove(kurs);
+
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("List", "Kurs");
+        }
     }
 }
