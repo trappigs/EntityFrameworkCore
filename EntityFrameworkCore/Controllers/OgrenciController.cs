@@ -141,7 +141,6 @@ namespace EntityFrameworkCore.Controllers
         public async Task<IActionResult> Delete([FromForm]int id)
         {
             var ogrenci = await _context.Ogrenciler.FindAsync(id);
-
             
             if (ogrenci == null)
             {

@@ -1,0 +1,21 @@
+﻿@model Kurs
+
+@{
+    ViewData["Title"] = "Kurs Ekle";
+}
+
+<h2>Kurs Ekle</h2>
+<hr />
+<form asp-controller="Kurs" asp-action="Create" method="post">
+
+    @* post formu çalışacağında öğrenci id'si de gönderilmeli *@
+    <div>
+        <label asp-for="Baslik" class="form-label">Kurs Adı Giriniz:</label>
+        <input asp-for="Baslik" class="form-control" />
+    </div>
+
+    <button type="submit" class="btn btn btn-danger">
+        Kaydet
+    </button>
+
+</form>
