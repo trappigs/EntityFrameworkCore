@@ -35,7 +35,7 @@ namespace EntityFrameworkCore.Migrations
 
                     b.HasKey("KursId");
 
-                    b.ToTable("Kurslar");
+                    b.ToTable("Kurslar", (string)null);
                 });
 
             modelBuilder.Entity("EntityFrameworkCore.Data.KursKayit", b =>
@@ -57,7 +57,7 @@ namespace EntityFrameworkCore.Migrations
 
                     b.HasKey("KayitId");
 
-                    b.ToTable("KursKayitlari");
+                    b.ToTable("KursKayitlari", (string)null);
                 });
 
             modelBuilder.Entity("EntityFrameworkCore.Data.Ogrenci", b =>
@@ -82,7 +82,7 @@ namespace EntityFrameworkCore.Migrations
 
                     b.HasKey("OgrenciId");
 
-                    b.ToTable("Ogrenciler");
+                    b.ToTable("Ogrenciler", (string)null);
                 });
 #pragma warning restore 612, 618
         }
