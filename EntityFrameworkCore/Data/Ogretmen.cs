@@ -15,6 +15,12 @@ namespace EntityFrameworkCore.Data
 
         public string? Telefon { get; set; }
 
+
+        // Bu özelliğin veri türü DateTime olacak ve sadece tarih kısmını alacak.
+        [DataType(DataType.Date)]
+        // Bu özelliğin görüntülenme biçimi belirlenecek.
+        // {0:yyyy-MM-dd} ifadesi, yalnızca yıl, ay ve gün bilgilerini gösterir.
+        [DisplayFormat(DataFormatString="{0:yyyy-MM-dd}")]
         public DateTime BaslamaTarihi { get; set; }
 
         public ICollection<Kurs> Kurslar { get; set; } = new List<Kurs>();
