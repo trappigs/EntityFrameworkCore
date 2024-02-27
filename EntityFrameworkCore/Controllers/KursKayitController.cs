@@ -14,9 +14,18 @@ namespace EntityFrameworkCore.Controllers
             _context = context;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            // include => join anlamına geliyor
+            // kurskayitlari tablosundaki ogrenci-id ve kurs-id alanları ile ogrenci ve kurs tabloları arasında ilişki kuruldu.
+            // bu sayede ogrenci ve kurs tablolarındaki verilere ulaşabileceğiz.
+            var kursKayitlari = await _context
+                .KursKayitlari
+                .Include(x => x.Ogrenci)
+                .Include(x => x.Kurs)
+                .ToListAsync();
+
+            return View(kursKayitlari);
         }
 
         public async Task<IActionResult> Create()
