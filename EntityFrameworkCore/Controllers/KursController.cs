@@ -120,4 +120,9 @@ namespace EntityFrameworkCore.Controllers
             return RedirectToAction("List", "Kurs");
         }
     }
+
+
+
+
+
 }
