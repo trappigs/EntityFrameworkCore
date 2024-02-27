@@ -1,5 +1,6 @@
 ﻿using EntityFrameworkCore.Data;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace EntityFrameworkCore.Controllers
 {
@@ -54,13 +55,25 @@ namespace EntityFrameworkCore.Controllers
         // Veritabanına kaydettikten sonra, kullanıcıyı List.cshtml sayfasına yönlendiriyoruz
         // Bu sayfada, veritabanındaki kurs bilgilerini listeleyip gösteriyoruz
         [HttpGet]
-        public IActionResult Edit(int? id)
+        public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
-            var Kurslar = _context.Kurslar.FirstOrDefault(m => m.KursId == id);
+
+            // Kurslar değişkeninin ayrıntılı açıklaması şöyle
+            // Kurslar değişkeni, veritabanından ilgili kurs bilgisini çekmek için kullanılıyor
+            // KursKayitlari değişkeni, ilgili kursa kayıt olan öğrencilerin bilgilerini çekmek için kullanılıyor
+            // KursKayitlari değişkeni, Kurs tablosu ile Ogrenci tablosu arasında bir ilişki olduğu için kullanılıyor
+            // KursKayitlari değişkeni, Kurs tablosu ile Ogrenci tablosu arasındaki ilişkiyi kullanarak, ilgili kursa kayıt olan öğrencilerin bilgilerini çekmek için kullanılıyor
+            // Include metodu ile KursKayitlari değişkeni, Kurs tablosu ile Ogrenci tablosu arasındaki ilişkiyi kullanarak, ilgili kursa kayıt olan öğrencilerin bilgilerini çekmek için kullanılıyor
+            // ThenInclude metodu ile KursKayitlari değişkeni, Kurs tablosu ile Ogrenci tablosu arasındaki ilişkiyi kullanarak, ilgili kursa kayıt olan öğrencilerin bilgilerini çekmek için kullanılıyor
+            var Kurslar = await _context
+                .Kurslar
+                .Include(k => k.KursKayitlari)
+                .ThenInclude(k => k.Ogrenci)
+                .FirstOrDefaultAsync(m => m.KursId == id);
 
             return View("Edit", Kurslar);
         }
