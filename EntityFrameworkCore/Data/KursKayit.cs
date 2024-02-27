@@ -22,8 +22,5 @@ namespace EntityFrameworkCore.Data
         public Ogrenci Ogrenci { get; set; } = null!; // ogrenci-id: 1 => kurs-id: 5
 
         public Kurs Kurs { get; set; } = null!;
-
-
-        // ogrenci-id: 1 => kurs-id: 5
     }
 }

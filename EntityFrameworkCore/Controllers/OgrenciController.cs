@@ -59,7 +59,11 @@ namespace EntityFrameworkCore.Controllers
             // alternatif olarak FirstOrDefaultAsync() metodu kullanılabilir
             // FirstOrDefaultAsync() metodundaki fark ise, eğer id'ye göre öğrenci bulunamazsa null döndürür
             // aynı zamanda id değilde farklı parametrelere göre de arama yapılabilir
-            var ogrenci = await _context.Ogrenciler.FirstOrDefaultAsync(m => m.OgrenciId == id);
+            var ogrenci = await _context
+                .Ogrenciler
+                .Include(o => o.KursKayitlari)
+                .ThenInclude(o => o.Kurs)
+                .FirstOrDefaultAsync(m => m.OgrenciId == id);
 
             if (ogrenci == null)
             {
