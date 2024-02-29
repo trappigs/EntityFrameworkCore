@@ -1,5 +1,7 @@
 ﻿using EntityFrameworkCore.Data;
+using EntityFrameworkCore.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
 namespace EntityFrameworkCore.Controllers
@@ -14,15 +16,22 @@ namespace EntityFrameworkCore.Controllers
         }
 
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            var kurslar = await _context.Kurslar
+                .Include(k => k.Ogretmen)
+                .ToListAsync();
+            return View(kurslar);
         }
 
 
         [HttpGet]
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
+            // OgretmenId ve Ad bilgileri gerçek tablodan alındığı için, sütun adları doğru girilmeli
+            // OgretmenId hangi sütuna göre getirileceği, AdSoyad ile nasıl sergileneceği gösteriliyor
+            ViewBag.Ogretmenler = new SelectList(await _context.Ogretmenler.ToListAsync(),"OgretmenId", "AdSoyad");
+
 
             return View();
         }
@@ -30,17 +39,16 @@ namespace EntityFrameworkCore.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(Kurs model)
         {
-            _context.Kurslar.Add(model);
+            if (ModelState.IsValid)
+            {
+                _context.Kurslar.Add(model);
 
-            await _context.SaveChangesAsync();
+                await _context.SaveChangesAsync();
 
-            return RedirectToAction("List", "Kurs");
-        }
+            }
 
-        public IActionResult List()
-        {
-            var kurslar = _context.Kurslar.ToList();
-            return View(kurslar);
+
+            return RedirectToAction("Index", "Kurs");
         }
 
         // Editlenecek Kurs Sayfasının id bilgisi alınıyor
@@ -62,40 +70,48 @@ namespace EntityFrameworkCore.Controllers
                 return NotFound();
             }
 
-            // Kurslar değişkeninin ayrıntılı açıklaması şöyle
-            // Kurslar değişkeni, veritabanından ilgili kurs bilgisini çekmek için kullanılıyor
-            // KursKayitlari değişkeni, ilgili kursa kayıt olan öğrencilerin bilgilerini çekmek için kullanılıyor
-            // KursKayitlari değişkeni, Kurs tablosu ile Ogrenci tablosu arasında bir ilişki olduğu için kullanılıyor
-            // KursKayitlari değişkeni, Kurs tablosu ile Ogrenci tablosu arasındaki ilişkiyi kullanarak, ilgili kursa kayıt olan öğrencilerin bilgilerini çekmek için kullanılıyor
-            // Include metodu ile KursKayitlari değişkeni, Kurs tablosu ile Ogrenci tablosu arasındaki ilişkiyi kullanarak, ilgili kursa kayıt olan öğrencilerin bilgilerini çekmek için kullanılıyor
-            // ThenInclude metodu ile KursKayitlari değişkeni, Kurs tablosu ile Ogrenci tablosu arasındaki ilişkiyi kullanarak, ilgili kursa kayıt olan öğrencilerin bilgilerini çekmek için kullanılıyor
-            var Kurslar = await _context
-                .Kurslar
-                .Include(k => k.KursKayitlari)
-                .ThenInclude(k => k.Ogrenci)
-                .FirstOrDefaultAsync(m => m.KursId == id);
+            var kurs = await _context
+                        .Kurslar
+                        .Include(k => k.KursKayitlari)
+                        .ThenInclude(k => k.Ogrenci)
+                        .Select(k => new KursViewModel
+                        {
+                            KursId = k.KursId,
+                            Baslik = k.Baslik,
+                            OgretmenId = k.OgretmenId,
+                            KursKayitlari = k.KursKayitlari
+                        })
+                        .FirstOrDefaultAsync(k => k.KursId == id);
 
-            return View("Edit", Kurslar);
+            if (kurs == null)
+            {
+                return NotFound();
+            }
+
+            ViewBag.Ogretmenler = new SelectList(await _context.Ogretmenler.ToListAsync(), "OgretmenId", "AdSoyad");
+
+            return View(kurs);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Edit(int id, Kurs Kurslar)
+        public async Task<IActionResult> Edit(int id, KursViewModel model)
         {
 
-            if (Kurslar == null)
+            if (model == null)
             {
                 return NotFound();
             }
 
             if (ModelState.IsValid)
             {
-                _context.Update(Kurslar);
+                _context.Update(new Kurs() { KursId=model.KursId, Baslik = model.Baslik, OgretmenId = model.OgretmenId });
 
                 await _context.SaveChangesAsync();
             }
 
+            ViewBag.Ogretmenler = new SelectList(await _context.Ogretmenler.ToListAsync(), "OgretmenId", "AdSoyad");
 
-            return RedirectToAction("List", "Kurs");
+            return RedirectToAction("Index", "Kurs");
         }
 
         [HttpGet]
@@ -130,7 +146,7 @@ namespace EntityFrameworkCore.Controllers
 
             await _context.SaveChangesAsync();
 
-            return RedirectToAction("List", "Kurs");
+            return RedirectToAction("Index", "Kurs");
         }
     }
 

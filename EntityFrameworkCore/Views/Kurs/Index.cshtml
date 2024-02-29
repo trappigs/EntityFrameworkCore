@@ -4,12 +4,13 @@
     ViewData["Title"] = "Kurs Listele";
 }
 
-<table class="table">
+<table class="table table-bordered">
     <thead>
         <tr>
-            <th>Kurs Listesi</th>
-            <th>Kurs Adı</th>
-            <th>İşlemler</th>
+            <th>@Html.DisplayNameFor(m => m.KursId)</th>
+            <th>@Html.DisplayNameFor(m => m.Baslik)</th>
+            <th>@Html.DisplayNameFor(m => m.Ogretmen.AdSoyad)</th>
+            <th style="width: 150px;">İşlemler</th>
         </tr>
     </thead>
     <tbody>
@@ -17,11 +18,12 @@
         {
             <tr>
                 <td>
-                    @item.KursId
+                    @Html.DisplayFor(modelItem => item.KursId)
                 </td>
                 <td>
-                    @item.Baslik
+                    @Html.DisplayFor(modelItem => item.Baslik)
                 </td>
+                <td>@Html.DisplayFor(modelItem => item.Ogretmen.AdSoyad)</td>
                 <td>
                     <a class="btn btn-primary" asp-action="Edit" asp-route-id="@item.KursId">Düzenle</a>
                     <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.KursId">Sil</a>

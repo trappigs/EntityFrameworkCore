@@ -1,18 +1,16 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using EntityFrameworkCore.Data;
+using System.ComponentModel.DataAnnotations;
 
-namespace EntityFrameworkCore.Data
+namespace EntityFrameworkCore.Models
 {
-    public class Kurs
+    public class KursViewModel
     {
-
         [Key]
         public int KursId { get; set; }
 
         public string? Baslik { get; set; }
 
         public int? OgretmenId { get; set; }
-
-        public Ogretmen Ogretmen { get; set; } = null!;
 
         public ICollection<KursKayit> KursKayitlari { get; set; } = new List<KursKayit>();
 
