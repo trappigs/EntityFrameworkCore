@@ -37,18 +37,20 @@ namespace EntityFrameworkCore.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(Kurs model)
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create(KursViewModel model)
         {
+            ViewBag.Ogretmenler = new SelectList(await _context.Ogretmenler.ToListAsync(), "OgretmenId", "AdSoyad");
             if (ModelState.IsValid)
             {
-                _context.Kurslar.Add(model);
+                _context.Kurslar.Add(new Kurs() { KursId = model.KursId, Baslik = model.Baslik, OgretmenId = model.OgretmenId });
 
                 await _context.SaveChangesAsync();
 
+                return RedirectToAction("Index","Kurs");
             }
 
-
-            return RedirectToAction("Index", "Kurs");
+            return View(model);
         }
 
         // Editlenecek Kurs Sayfasının id bilgisi alınıyor
@@ -96,22 +98,33 @@ namespace EntityFrameworkCore.Controllers
         [HttpPost]
         public async Task<IActionResult> Edit(int id, KursViewModel model)
         {
-
-            if (model == null)
+            if (id != model.KursId)
             {
                 return NotFound();
             }
 
             if (ModelState.IsValid)
             {
-                _context.Update(new Kurs() { KursId=model.KursId, Baslik = model.Baslik, OgretmenId = model.OgretmenId });
-
-                await _context.SaveChangesAsync();
+                try
+                {
+                    _context.Update(new Kurs() { KursId = model.KursId, Baslik = model.Baslik, OgretmenId = model.OgretmenId });
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateException)
+                {
+                    if (!_context.Kurslar.Any(o => o.KursId == model.KursId))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction("Index");
             }
-
             ViewBag.Ogretmenler = new SelectList(await _context.Ogretmenler.ToListAsync(), "OgretmenId", "AdSoyad");
-
-            return RedirectToAction("Index", "Kurs");
+            return View(model);
         }
 
         [HttpGet]
